@@ -102,7 +102,7 @@
           <el-upload
             name="img"
             class="avatar-uploader"
-            action="/dev-api/api/fileUpload"
+            action="/dev-api/api/pswStore/fileUpload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
