@@ -34,7 +34,10 @@ export const reqGetSpuSaleListBySpuId = (spuId) =>request({
     url:`/admin/product/spu/getSpuSaleListBySpuId/${spuId}`,
     method:'get'
 })
-
+export const reqGetSpuSaleListBySpuId2 = (spuId) =>request({
+    url:`/admin/product/spu/getSpuSaleListBySpuId2/${spuId}`,
+    method:'get'
+})
 //根据三级分类id获取attr列表
 export const reqGetAttrListBycategoryId=(category1Id,category2Id,category3Id)=>request({
     url:`/admin/product/attr/getListById/${category1Id}/${category2Id}/${category3Id}`,
@@ -45,4 +48,10 @@ export const reqAddSku=(skuInfo)=>request({
     url:'/admin/product/spu/addSku',
     method:'post',
     data:skuInfo
+})
+
+//根据id获取spuInfo
+export const reqGetSpuInfoById=(spu_Id)=>request({
+    url:`/admin/product/spu/getSpuInfoById/${spu_Id}`,
+    method:'get'
 })

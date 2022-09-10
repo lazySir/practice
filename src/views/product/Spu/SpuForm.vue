@@ -142,7 +142,6 @@ export default {
         spuImageList: [],
         //平台销售属性与属性值的收集
         spuSaleList: [],
-        spu_sale_name: "",
       }, //存储SPU信息属性 ,初始化的时候是个空对象 在修改的时候会返回spu信息（对象），在修改的时候可以利用服务器返回的这个对象提交给服务器
       //但是在添加spu的时候，并没有像服务器发送请求，那么数据收集到哪【spu】，收集的时候
       tradeMarkList: [], //存储的是品牌的信息  由数据库返回
@@ -174,26 +173,45 @@ export default {
     //初始化SpuForm数据----修改
     async initSpudata(row) {
       //获取spu信息的数据
-      let spuResult = await this.$API.spu.reqSpu(row.id);
+      let spuResult = await this.$API.spu.reqGetSpuInfoById(row.id);
       if (spuResult.code == 200) {
-        this.spu = spuResult.data;
+        this.spu.category1Id = spuResult.data.category1Id;
+        this.spu.category2Id = spuResult.data.category2Id;
+        this.spu.category3Id = spuResult.data.category3Id;
+        this.spu.spu_descript=spuResult.data.spu_descript;
+        this.spu.spu_name=spuResult.data.spu_name
+        this.spu.spu_tradeMark=spuResult.data.spu_tradeMark
       }
       //获取品牌的信息
-      let tradeMarkResult = await this.$API.spu.reqTradeMarkList();
+      let tradeMarkResult = await this.$API.spu.reqGetBrandListByCategoryId(
+        row.category1Id,
+        row.category2Id,
+        row.category3Id
+      );
       if (tradeMarkResult.code == 200) {
         this.tradeMarkList = tradeMarkResult.data;
       }
       //获取spu图片的数据
-      let spuImageResult = await this.$API.spu.reqSpuImageList(row.id);
+      let spuImageResult = await this.$API.spu.reqGetSpuImageListBySpuId(
+        row.spu_img_id
+      );
       if (spuImageResult.code == 200) {
         let listArr = spuImageResult.data;
         //由于照片墙显示图片的数据需要数组，数组里面的元素须有name和url字段
         listArr.forEach((item) => {
-          item.name = item.imgName;
-          item.url = item.imgUrl;
+          item.name = item.spu_img_name;
+          item.url = item.spu_img_url;
         });
         //把整理好的数据复制给
         this.spuImageList = listArr;
+      }
+      //获取平台全部的销售属性
+      let saleResult = await this.$API.spu.reqGetSpuSaleListBySpuId2(
+        row.spu_sale_id
+      );
+      if (saleResult.code == 200) {
+        console.log(saleResult)
+        this.spu.spuSaleList = saleResult.data;
       }
     },
     //初始化SpuForm数据---新增
