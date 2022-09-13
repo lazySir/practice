@@ -212,7 +212,7 @@ export default {
     },
     //删除某一个spu
     async deleteSpu(row) {
-      let result = await this.$API.spu.reqDeleteSpu(row.id);
+      let result = await this.$API.spu.reqDeleteSpuById(row.id);
       console.log(row);
       if (result.code == 200) {
         //提示

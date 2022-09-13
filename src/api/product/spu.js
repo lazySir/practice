@@ -89,9 +89,16 @@ export const reqGetSpuInfoById = (spu_Id) =>
     method: "get",
   });
 
-  //根据spu_id获取sku列表
-  export const reqGetSkuListById=(spu_id)=>request({
-    url:`/admin/product/spu/getSkuById/${spu_id}`,
-    method:'get'
-
-  })
+//根据spu_id获取sku列表
+export const reqGetSkuListById = (spu_id) =>
+  request({
+    url: `/admin/product/spu/getSkuById/${spu_id}`,
+    method: "get",
+  });
+//根据spu_id删除数据
+export const reqDeleteSpuById = (spu_id) => {
+  request({
+    url: `/admin/product/spu/deleteById/${spu_id}`,
+    method: "delete",
+  });
+};

@@ -337,6 +337,7 @@ export default {
         (this.spu.spuSaleList = []),
         (this.spu.spu_sale_name = "");
       this.tradeMarkList = [];
+      this.spuImageList=[];
       //5.告诉父组件刷新列表数据
       this.$emit("refreshListSpu");
     },
