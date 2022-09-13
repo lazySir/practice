@@ -56,7 +56,7 @@
               >
               <!-- 气泡弹出框 -->
               <el-popconfirm
-                :title="`确定删除${row.spuName}吗？`"
+                :title="`确定删除${row.spu_name}吗？`"
                 @onConfirm="deleteSpu(row)"
               >
                 <el-button
@@ -97,21 +97,21 @@
       >
     </el-card>
     <el-dialog
-      :title="`${spu.spuName}的sku列表`"
+      :title="`${spu.spu_name}的sku列表`"
       :visible.sync="dialogTableVisible"
       :befor-close="close"
     >
       <el-table style="width: 100%" v-loading="loading" border :data="skuList">
-        <el-table-column width="width" prop="skuName" label="名称">
+        <el-table-column width="width" prop="sku_name" label="名称">
         </el-table-column>
-        <el-table-column width="width" prop="price" label="价格">
+        <el-table-column width="width" prop="sku_price" label="价格">
         </el-table-column>
-        <el-table-column width="width" prop="weight" label="重量">
+        <el-table-column width="width" prop="sku_weight" label="重量">
         </el-table-column>
         <el-table-column width="width" label="默认图片">
           <template slot-scope="{ row, $index }">
             <img
-              :src="row.skuDefaultImg"
+              :src="row.sku_DefaultImg"
               style="width: 100px; height: 100px"
               alt=""
             />
@@ -241,7 +241,7 @@ export default {
       this.dialogTableVisible = true;
       this.spu = spu;
       //获取sku列表的数据进行展示
-      let result = await this.$API.spu.reqSkuList(spu.id);
+      let result = await this.$API.spu.reqGetSkuListById(spu.id);
       if (result.code == 200) {
         this.skuList = result.data;
         this.loading = false;

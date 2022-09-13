@@ -88,3 +88,10 @@ export const reqGetSpuInfoById = (spu_Id) =>
     url: `/admin/product/spu/getSpuInfoById/${spu_Id}`,
     method: "get",
   });
+
+  //根据spu_id获取sku列表
+  export const reqGetSkuListById=(spu_id)=>request({
+    url:`/admin/product/spu/getSkuById/${spu_id}`,
+    method:'get'
+
+  })
