@@ -256,13 +256,7 @@ export default {
     },
     //spu保存完毕需要刷新页面
     refreshListSpu() {
-      this.handleCurrentChange(
-        this.spu.id
-          ? this.page
-          : this.records.length == this.limit
-          ? Math.ceil(this.total / this.limit) + 1
-          : Math.ceil(this.total / this.limit)
-      );
+      this.handleCurrentChange(this.page);
     },
   },
   components: {

@@ -175,12 +175,13 @@ export default {
       //获取spu信息的数据
       let spuResult = await this.$API.spu.reqGetSpuInfoById(row.id);
       if (spuResult.code == 200) {
+        this.spu.id = spuResult.data.id;
         this.spu.category1Id = spuResult.data.category1Id;
         this.spu.category2Id = spuResult.data.category2Id;
         this.spu.category3Id = spuResult.data.category3Id;
-        this.spu.spu_descript=spuResult.data.spu_descript;
-        this.spu.spu_name=spuResult.data.spu_name
-        this.spu.spu_tradeMark=spuResult.data.spu_tradeMark
+        this.spu.spu_descript = spuResult.data.spu_descript;
+        this.spu.spu_name = spuResult.data.spu_name;
+        this.spu.spu_tradeMark = spuResult.data.spu_tradeMark;
       }
       //获取品牌的信息
       let tradeMarkResult = await this.$API.spu.reqGetBrandListByCategoryId(
@@ -210,7 +211,6 @@ export default {
         row.spu_sale_id
       );
       if (saleResult.code == 200) {
-        console.log(saleResult)
         this.spu.spuSaleList = saleResult.data;
       }
     },
@@ -299,11 +299,19 @@ export default {
     async addOrUpdateSpu() {
       //整理参数
       //1.整理照片墙的数据 需要携带imgName和imgUrl两个字段
+
       this.spu.spuImageList = this.spuImageList.map((item) => {
-        return {
-          spu_img_name: item.name,
-          spu_img_url: item.response.imgUrl,
-        };
+        if (item.response) {
+          return {
+            spu_img_name: item.name,
+            spu_img_url: item.response.imgUrl,
+          };
+        } else {
+          return {
+            spu_img_name: item.spu_img_name,
+            spu_img_url: item.spu_img_url,
+          };
+        }
       });
       //删除spu_sale_name
       delete this.spu.spu_sale_name;
