@@ -118,6 +118,14 @@ export const constantRoutes = [
       },
     },
     {
+      path: "category",
+      name: "Categroy",
+      component: () => import("@/views/product/Category"),
+      meta: {
+        title: "分类管理",
+      },
+    },
+    {
       path: "spu",
       name: "Spu",
       component: () => import("@/views/product/Spu"),
