@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -32,127 +32,167 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
+    path: "/login",
+    component: () => import("@/views/login/index"),
     hidden: true,
-    meta:{title:"练手项目"}
+    meta: { title: "练手项目" },
   },
 
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
+    path: "/404",
+    component: () => import("@/views/404"),
+    hidden: true,
   },
+  
 
   {
-    path: '/',
+    path: "/",
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
-    }]
+    redirect: "/dashboard",
+    children: [
+      {
+        path: "dashboard",
+        name: "Dashboard",
+        component: () => import("@/views/dashboard/index"),
+        meta: { title: "首页", icon: "dashboard" },
+      },
+    ],
   },
-//小功能
-{
-  path:'/smallFeature',
-  component:Layout,
-  name:'smallFeature',
-  meta:{
-    title:'小功能',
-    icon:'el-icon-s-grid'
+    //acl
+    {
+      path: "/acl",
+      component: Layout,
+      name: "Acl",
+      meta: {
+        title: "权限管理",
+        icon: "el-icon-lock",
+      },
+      children: [
+        {
+          path: "role",
+          name: "role",
+          component: () => import("@/views/acl/role"),
+          meta: {
+            title: "角色管理",
+          },
+        },
+        {
+          path: "user",
+          name: "user",
+          component: () => import("@/views/acl/user"),
+          meta: {
+            title: "用户管理",
+          },
+        },
+        {
+          path: "menu",
+          name: "menu",
+          component: () => import("@/views/acl/menu"),
+          meta: {
+            title: "菜单管理",
+          },
+        },
+      ],
+    },
+  //小功能
+  {
+    path: "/smallFeature",
+    component: Layout,
+    name: "smallFeature",
+    meta: {
+      title: "小功能",
+      icon: "el-icon-s-grid",
+    },
+    children: [
+      {
+        path: "pswManage",
+        name: "pswManage",
+        component: () => import("@/views/smallFeature/pswManage"),
+        meta: {
+          title: "密码管理",
+        },
+      },
+      {
+        path: "xxx",
+        name: "xxx",
+        component: () => import("@/views/smallFeature/xxx"),
+        meta: {
+          title: "待定",
+        },
+      },
+    ],
   },
-  children:[
-    {
-      path:'pswManage',
-      name:'pswManage',
-      component:()=>import('@/views/smallFeature/pswManage'),
-      meta:{
-        title:'密码管理'
-      }
+  //product
+  {
+    path: "/product",
+    component: Layout,
+    name: "Product",
+    meta: {
+      title: "商品管理",
+      icon: "el-icon-goods",
     },
-    {
-      path:'xxx',
-      name:'xxx',
-      component:()=>import('@/views/smallFeature/xxx'),
-      meta:{
-        title:'待定'
-      }
-    }
-  ]
-},
-//product
-{
-  path: "/product",
-  component: Layout,
-  name: "Product",
-  meta: {
-    title: "商品管理",
-    icon: "el-icon-goods",
+    children: [
+      {
+        path: "trademark",
+        name: "trademark",
+        component: () => import("@/views/product/tradeMark"),
+        meta: {
+          title: "品牌管理",
+        },
+      },
+      {
+        path: "attr",
+        name: "Attr",
+        component: () => import("@/views/product/Attr"),
+        meta: {
+          title: "平台属性管理",
+        },
+      },
+      {
+        path: "sku",
+        name: "Sku",
+        component: () => import("@/views/product/Sku"),
+        meta: {
+          title: "Sku管理",
+        },
+      },
+      {
+        path: "category",
+        name: "Categroy",
+        component: () => import("@/views/product/Category"),
+        meta: {
+          title: "分类管理",
+        },
+      },
+      {
+        path: "spu",
+        name: "Spu",
+        component: () => import("@/views/product/Spu"),
+        meta: {
+          title: "Spu管理",
+        },
+      },
+    ],
   },
-  children: [
-    {
-      path: "trademark",
-      name: "trademark",
-      component: () => import("@/views/product/tradeMark"),
-      meta: {
-        title: "品牌管理",
-      },
-    },
-    {
-      path: "attr",
-      name: "Attr",
-      component: () => import("@/views/product/Attr"),
-      meta: {
-        title: "平台属性管理",
-      },
-    },
-    {
-      path: "sku",
-      name: "Sku",
-      component: () => import("@/views/product/Sku"),
-      meta: {
-        title: "Sku管理",
-      },
-    },
-    {
-      path: "category",
-      name: "Categroy",
-      component: () => import("@/views/product/Category"),
-      meta: {
-        title: "分类管理",
-      },
-    },
-    {
-      path: "spu",
-      name: "Spu",
-      component: () => import("@/views/product/Spu"),
-      meta: {
-        title: "Spu管理",
-      },
-    },
-  ],
-},
 
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+  { path: "*", redirect: "/404", hidden: true },
+];
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes,
+  });
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;
