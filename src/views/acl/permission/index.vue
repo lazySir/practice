@@ -227,8 +227,8 @@ export default {
           this.$message.success(
             result.message || `${perm.id ? "修改" : "添加"}成功!`
           );
-          this.resetData();
-          this.fetchPermissionList();
+          this.resetData();//重置数据
+          this.fetchPermissionList();//重新获取列表
         }
       });
     },
