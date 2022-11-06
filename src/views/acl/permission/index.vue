@@ -61,15 +61,15 @@
       >
         <el-form-item
           label="父级名称"
-          v-if="permission.level > 2 && !permission.id"
+          v-if="permission.level > 1 && !permission.id"
         >
           <el-input :value="permission.paclKey" disabled />
         </el-form-item>
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="名称" prop="aclKey">
           <el-input v-model="permission.aclKey" />
         </el-form-item>
 
-        <el-form-item label="功能权限值" prop="code">
+        <el-form-item label="功能权限值" prop="ackValue">
           <el-input v-model="permission.aclValue" />
         </el-form-item>
       </el-form>
@@ -86,14 +86,14 @@
 <script>
 // 菜单权限校验的规则
 const menuRules = {
-  name: [{ required: true, message: "名称必须输入" }],
-  code: [{ required: true, message: "权限值必须输入" }],
+  aclKey: [{ required: true, message: "名称必须输入" }],
+  aclValue: [{ required: true, message: "权限值必须输入" }],
 };
 
 // 按钮功能权限校验的规则
 const btnRules = {
-  name: [{ required: true, message: "名称必须输入" }],
-  code: [{ required: true, trigger: "blur", message: "功能权限值必须输入" }],
+  aclKey: [{ required: true, message: "名称必须输入" }],
+  aclValue: [{ required: true, trigger: "blur", message: "功能权限值必须输入" }],
 };
 
 export default {
@@ -103,7 +103,6 @@ export default {
     return {
       dialogVisible: false, //添加一级权限对话框
       menuPermissionList: [], // 菜单列表
-      expandKeys: [], // 需要自动展开的项
       dialogPermissionVisible: false, // 是否显示菜单权限的Dialog
       permission: {
         // 要操作的菜单权限对象
@@ -133,7 +132,7 @@ export default {
     根据权限的等级来计算确定校验规则
     */
     permissionRules() {
-      return this.permission.level === 4 ? btnRules : menuRules;
+      return this.permission.level === 3 ? btnRules : menuRules;
     },
   },
 
@@ -172,9 +171,9 @@ export default {
       this.dialogPermissionVisible = true;
 
       if (row.level) {
-        this.permission.pid = row.id;
+        console.log(row)
+        this.permission.type_id = row.type_id;
         this.permission.level = row.level + 1;
-        this.permission.type = this.permission.level === 3 ? 2 : 1;
         this.permission.paclKey = row.aclKey; // 用于显示父名称, 但提交请求时是不需要的
       }
 
@@ -188,7 +187,6 @@ export default {
     toUpdatePermission(row) {
       this.dialogPermissionVisible = true;
       this.permission = { ...row }; // 使用浅拷贝
-      this.permission.type = this.permission.level === 4 ? 2 : 1;
 
       // 清除校验(必须在界面更新之后)
       this.$nextTick(() => this.$refs.permission.clearValidate());
@@ -224,10 +222,8 @@ export default {
     addOrUpdatePermission() {
       this.$refs.permission.validate(async (valid) => {
         if (valid) {
-          const { pname, ...perm } = this.permission; // pname不需要携带
-          const result = await this.$API.permission[
-            perm.id ? "updatePermission" : "addPermission"
-          ](perm);
+          const { paclKey, ...perm } = this.permission; // p不需要携带
+          const result = await this.$API.menus.reqAddOrUpdateAclMenus(perm)
           this.$message.success(
             result.message || `${perm.id ? "修改" : "添加"}成功!`
           );
