@@ -93,7 +93,9 @@ const menuRules = {
 // 按钮功能权限校验的规则
 const btnRules = {
   aclKey: [{ required: true, message: "名称必须输入" }],
-  aclValue: [{ required: true, trigger: "blur", message: "功能权限值必须输入" }],
+  aclValue: [
+    { required: true, trigger: "blur", message: "功能权限值必须输入" },
+  ],
 };
 
 export default {
@@ -171,7 +173,7 @@ export default {
       this.dialogPermissionVisible = true;
 
       if (row.level) {
-        console.log(row)
+        console.log(row);
         this.permission.type_id = row.type_id;
         this.permission.level = row.level + 1;
         this.permission.paclKey = row.aclKey; // 用于显示父名称, 但提交请求时是不需要的
@@ -196,12 +198,14 @@ export default {
     删除某个权限节点
     */
     removePermission(permission) {
-      this.$confirm("此操作将永久删除该记录, 是否继续?", "提示", {
+      this.$confirm(`此操作将永久删除${permission.aclKey}, 是否继续?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
-          const result = await this.$API.permission.removePermission(
-            permission.id
+          const result = await this.$API.menus.reqRemoveAclMenus(
+            permission
           );
           this.$message.success(result.message || "删除成功!");
           this.fetchPermissionList();
@@ -223,12 +227,12 @@ export default {
       this.$refs.permission.validate(async (valid) => {
         if (valid) {
           const { paclKey, ...perm } = this.permission; // p不需要携带
-          const result = await this.$API.menus.reqAddOrUpdateAclMenus(perm)
+          const result = await this.$API.menus.reqAddOrUpdateAclMenus(perm);
           this.$message.success(
             result.message || `${perm.id ? "修改" : "添加"}成功!`
           );
-          this.resetData();//重置数据
-          this.fetchPermissionList();//重新获取列表
+          this.resetData(); //重置数据
+          this.fetchPermissionList(); //重新获取列表
         }
       });
     },

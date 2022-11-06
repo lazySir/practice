@@ -22,3 +22,10 @@ export const reqAddOrUpdateAclMenus = (data) => {
     });
   }
 };
+// 删除菜单
+export const reqRemoveAclMenus = (data) =>{
+  return request({
+    url:`/admin/acl/menus/delete/${data.level}/${data.id}`,
+    method:"delete"
+  })
+}
