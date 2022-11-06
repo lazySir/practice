@@ -213,7 +213,6 @@ export default {
     //删除某一个spu
     async deleteSpu(row) {
       let result = await this.$API.spu.reqDeleteSpuById(row.id);
-      console.log(row);
       if (result.code == 200) {
         //提示
         this.$message({ type: "success", message: "删除spu成功！" });

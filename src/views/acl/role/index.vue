@@ -1,5 +1,5 @@
 <template>
-  <div>角色管理</div>
+  <div>role模块</div>
 </template>
 
 <script>

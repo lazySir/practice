@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters,mapState } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
@@ -28,10 +28,11 @@ export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',''
     ]),
+    ...mapState("user",['resultsAllRoutes']),
     routes() {
-      return this.$router.options.routes
+      return this.resultsAllRoutes
     },
     activeMenu() {
       const route = this.$route

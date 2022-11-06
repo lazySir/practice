@@ -96,9 +96,9 @@ export const reqGetSkuListById = (spu_id) =>
     method: "get",
   });
 //根据spu_id删除数据
-export const reqDeleteSpuById = (spu_id) => {
+export const reqDeleteSpuById = (spu_id) => 
   request({
     url: `/admin/product/spu/deleteById/${spu_id}`,
     method: "delete",
   });
-};
+

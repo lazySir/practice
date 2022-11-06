@@ -327,17 +327,25 @@ export default {
       //组件实例this._data 可以操作data当中的响应式的数据
       //this.$options可以获取配置对象，配置对象的data函数执行那么返回的响应式就是空对象
       (this.dialogImageUrl = ""), (this.dialogVisible = false);
-      (this.spu.category1Id = 0),
-        (this.spu.category2Id = 0),
         (this.category3Id = 0),
-        (this.spu.spu_descript = ""),
-        (this.spu.spu_name = "");
-      (this.spu.spu_tradeMark = ""),
-        (this.spu.spuImageList = []),
-        (this.spu.spuSaleList = []),
-        (this.spu.spu_sale_name = "");
       this.tradeMarkList = [];
       this.spuImageList=[];
+      this.spu={
+        //三级分类的id
+        category3Id: 0,
+        category1Id: 0,
+        category2Id: 0,
+        //描述
+        spu_descript: "",
+        //spu的名称
+        spu_name: "",
+        //品牌的名称
+        spu_tradeMark: "",
+        //收集spu图片的信息
+        spuImageList: [],
+        //平台销售属性与属性值的收集
+        spuSaleList: [],
+      }
       //5.告诉父组件刷新列表数据
       this.$emit("refreshListSpu");
     },

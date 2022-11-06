@@ -6,45 +6,23 @@ Vue.use(Router);
 /* Layout */
 import Layout from "@/layout";
 
-/**
- * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
- * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
- */
-
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
- */
+//需要把路由进行拆分
+//常量路由：就是不管用户是什么角色都可以看到的路由：登录、404、首页
 export const constantRoutes = [
+  //登录
   {
     path: "/login",
     component: () => import("@/views/login/index"),
     hidden: true,
     meta: { title: "练手项目" },
   },
-
+  //404
   {
     path: "/404",
     component: () => import("@/views/404"),
     hidden: true,
   },
-  
-
+//数据可视化
   {
     path: "/",
     component: Layout,
@@ -58,42 +36,46 @@ export const constantRoutes = [
       },
     ],
   },
-    //acl
-    {
-      path: "/acl",
-      component: Layout,
-      name: "Acl",
-      meta: {
-        title: "权限管理",
-        icon: "el-icon-lock",
-      },
-      children: [
-        {
-          path: "role",
-          name: "role",
-          component: () => import("@/views/acl/role"),
-          meta: {
-            title: "角色管理",
-          },
-        },
-        {
-          path: "user",
-          name: "user",
-          component: () => import("@/views/acl/user"),
-          meta: {
-            title: "用户管理",
-          },
-        },
-        {
-          path: "menu",
-          name: "menu",
-          component: () => import("@/views/acl/menu"),
-          meta: {
-            title: "菜单管理",
-          },
-        },
-      ],
+  //权限管理
+  {
+    path: "/acl",
+    name: "acl",
+    component: Layout,
+    meta: {
+      title: "权限管理",
+      icon: "el-icon-lock",
     },
+    children: [
+      {
+        path: "/acl/user",
+        name: "user",
+        component: () => import("@/views/acl/user"),
+        meta: {
+          title: "用户管理",
+        },
+      },
+      {
+        path: "/acl/role",
+        name: "role",
+        component: () => import("@/views/acl/role"),
+        meta: {
+          title: "角色管理",
+        }
+      },
+      {
+        path: "/acl/permission",
+        name: "permission",
+        component: () => import("@/views/acl/permission"),
+        meta: {
+          title: "菜单管理",
+        }
+      }
+      
+    ],
+  },
+];
+//异步路由：不同的用户（角色），需要过滤出能看到的权限
+export const asyncRoutes = [
   //小功能
   {
     path: "/smallFeature",
@@ -113,20 +95,20 @@ export const constantRoutes = [
         },
       },
       {
-        path: "xxx",
-        name: "xxx",
-        component: () => import("@/views/smallFeature/xxx"),
+        path: "snake",
+        name: "snake",
+        component: () => import("@/views/smallFeature/snake"),
         meta: {
-          title: "待定",
+          title: "贪吃蛇小游戏",
         },
       },
     ],
   },
-  //product
+  //商品管理
   {
     path: "/product",
     component: Layout,
-    name: "Product",
+    name: "product",
     meta: {
       title: "商品管理",
       icon: "el-icon-goods",
@@ -138,11 +120,12 @@ export const constantRoutes = [
         component: () => import("@/views/product/tradeMark"),
         meta: {
           title: "品牌管理",
+
         },
       },
       {
         path: "attr",
-        name: "Attr",
+        name: "attr",
         component: () => import("@/views/product/Attr"),
         meta: {
           title: "平台属性管理",
@@ -150,7 +133,7 @@ export const constantRoutes = [
       },
       {
         path: "sku",
-        name: "Sku",
+        name: "sku",
         component: () => import("@/views/product/Sku"),
         meta: {
           title: "Sku管理",
@@ -158,7 +141,7 @@ export const constantRoutes = [
       },
       {
         path: "category",
-        name: "Categroy",
+        name: "category",
         component: () => import("@/views/product/Category"),
         meta: {
           title: "分类管理",
@@ -166,7 +149,7 @@ export const constantRoutes = [
       },
       {
         path: "spu",
-        name: "Spu",
+        name: "spu",
         component: () => import("@/views/product/Spu"),
         meta: {
           title: "Spu管理",
@@ -174,11 +157,9 @@ export const constantRoutes = [
       },
     ],
   },
-
-
-  // 404 page must be placed at the end !!!
-  { path: "*", redirect: "/404", hidden: true },
 ];
+//任意路由:当路径出现错误 重定向
+export const anyRoutes = { path: "*", redirect: "/404", hidden: true };
 
 const createRouter = () =>
   new Router({
@@ -189,7 +170,6 @@ const createRouter = () =>
 
 const router = createRouter();
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter();
   router.matcher = newRouter.matcher; // reset router

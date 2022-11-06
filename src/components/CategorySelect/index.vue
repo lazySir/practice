@@ -13,7 +13,7 @@
         >
           <el-option
             v-for="(c1, index) in list1"
-            :key="c1.type_id"
+            :key="c1.id"
             :label="c1.category1_name"
             :value="c1.type_id"
           ></el-option>
@@ -29,12 +29,13 @@
         >
           <el-option
             v-for="(c2, index) in list2"
-            :key="c2.type_id"
+            :key="c2.id"
             :label="c2.category2_name"
             :value="c2.type_id"
           ></el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item label="三级分类">
         <el-select
           placeholder="请选择"
@@ -44,9 +45,9 @@
         >
           <el-option
             v-for="(c3, index) in list3"
-            :key="c3.type_id"
+            :key="c3.id"
             :label="c3.category3_name"
-            :value="c3.type_id"
+            :value="c3.id"
           ></el-option>
         </el-select>
       </el-form-item>
