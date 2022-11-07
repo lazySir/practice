@@ -2,7 +2,7 @@
   <el-card>
     <el-form inline>
       <el-form-item>
-        <el-input v-model="tempSearchObj.roleName" placeholder="角色名称" />
+        <el-input v-model="searchName" placeholder="角色名称" />
       </el-form-item>
       <el-button type="primary" icon="el-icon-search" @click="search"
         >查询</el-button
@@ -111,14 +111,8 @@ export default {
       total: 0, // 总记录数
       page: 1, // 当前页码
       limit: 5, // 每页记录数
-      tempSearchObj: {
-        // 收集搜索条件数据
-        roleName: "",
-      },
-      searchObj: {
-        // 发送请求的条件参数数据
-        roleName: "",
-      },
+      // 收集搜索条件数据
+      searchName: "",
       selectedRoles: [], // 所有选中的角色列表
     };
   },
@@ -142,8 +136,8 @@ export default {
       }
       this.getRoles(this.page);
     },
-    assignPermission() {
-      this.$router.push(`/acl/role/auth/${row.id}?roleName=${row.roleName}`);
+    assignPermission(row) {
+      this.$router.push(`/acl/role/auth/${row.id}?name=${row.name}`);
     },
     /*
     每页数量发生改变的监听
@@ -163,7 +157,7 @@ export default {
         cancelButtonText: "取消",
       })
         .then(({ value }) => {
-          this.$API.role.save({ roleName: value }).then((result) => {
+          this.$API.role.reqAddRole({ name: value }).then((result) => {
             this.$message.success(result.message || "添加角色成功");
             this.getRoles();
           });
@@ -196,21 +190,27 @@ export default {
     /*
     根据搜索条件进行搜索
     */
-    search() {
-      this.searchObj = { ...this.tempSearchObj };
-      this.getRoles();
+    async search() {
+      const { searchName } = this;
+      let results = await this.$API.role.reqSearchRole({ name: searchName });
+      if (results.code == 200) {
+        const { list, total } = results.data;
+        this.roles = list.map((item) => {
+          item.flag = false; //用于标识是否现实编辑输入框的属性
+          item.originRoleName = item.name; //缓存角色名称，用于取消
+          return item;
+        });
+        this.total = total;
+        this.listLoading = false;
+      }
+      // this.getRoles();
     },
 
     /*
     重置查询表单搜索列表
     */
     resetSearch() {
-      this.tempSearchObj = {
-        roleName: "",
-      };
-      this.searchObj = {
-        roleName: "",
-      };
+      this.searchName = "";
       this.getRoles();
     },
 
@@ -264,37 +264,8 @@ export default {
     },
     //修改角色名称 失去焦点的事件---切换为查看模式 ---展示span
     tolook(row) {
-      //1.不能为空
-      // if (row.name.trim() == "") {
-      //   row.flag = false;
-      //   row.name = originRoleName;
-      //   this.$message({
-      //     message: "请输入一个正常的角色名称！",
-      //     type: "warning",
-      //   });
-      //   return 0;
-      // }
-      // //2.计算是否重复
-      // let isRepat = this.roles.some((item) => {
-      //   //需要将row从数组里面将重复的去除
-      //   if (item.originRoleName === row.name) {
-      //     return true;
-      //   }
-      // });
-      // //3.如果重复了
-      // if (isRepat) {
-      //   row.flag = false;
-      //   row.name = row.originRoleName;
-      //   this.$message({
-      //     message: "输入的角色名称值重复！",
-      //     type: "error",
-      //   });
-      //   return;
-      // }
-      //4.如果没有重复则发送请求修改
-      // else {
-        row.flag=false;
-        this.updateRole(row);
+      row.flag = false;
+      this.updateRole(row);
       // }
     },
     //点击span的回调 变为编辑模式

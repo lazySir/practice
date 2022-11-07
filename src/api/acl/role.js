@@ -12,3 +12,21 @@ export const reqUpdateRoleName = (data)=>request({
   method:"put",
   data
 })
+//添加角色
+export const reqAddRole = (data)=>request({
+  url:`/admin/acl/role/add`,
+  method:"post",
+  data
+})
+
+//查找角色
+export const reqSearchRole=(data)=>request({
+  url:`/admin/acl/role/search`,
+  method:"post",
+  data
+})
+
+export const reqGetAuth=(id)=>request({
+  url:`/admin/acl/role/getAuth/${id}`,
+  method:"get"
+}) 
