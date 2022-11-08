@@ -25,8 +25,14 @@ export const reqSearchRole=(data)=>request({
   method:"post",
   data
 })
-
+//根据id获取权限
 export const reqGetAuth=(id)=>request({
   url:`/admin/acl/role/getAuth/${id}`,
   method:"get"
 }) 
+//根据id修改权限值
+export const reqUpdateAuth=(id,data)=>request({
+  url:`/admin/acl/role/updateAuth/${id}`,
+  method:"put",
+  data
+})

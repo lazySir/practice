@@ -11,7 +11,7 @@
       :props="defaultProps"
     />
     <el-button :loading="loading" type="primary" @click="save">保存</el-button>
-    <el-button @click="$router.replace({ name: 'Role' })">取消</el-button>
+    <el-button @click="$router.replace('/acl/role')">取消</el-button>
   </div>
 </template>
 <script>
@@ -51,18 +51,17 @@ export default {
         const allPermissions = resulst.data;
         this.allPermissions = allPermissions;
         const checkedIds = this.getCheckedIds(allPermissions);
-        console.log(checkedIds)
         // // console.log('getPermissions() checkedIds', checkedIds)
         this.$refs.tree.setCheckedKeys(checkedIds);
       }
     },
 
     /* 
-      得到所有选中的id列表
+      得到所有选中的aclKey列表
       */
     getCheckedIds(auths, initArr = []) {
       return auths.reduce((pre, item) => {
-        if (item.isChecked ) {
+        if (item.isChecked) {
           pre.push(item.aclKey);
         } else if (item.children) {
           this.getCheckedIds(item.children, initArr);
@@ -74,8 +73,8 @@ export default {
     /* 
       保存权限列表
       */
-    save() {
-      var ids = this.$refs.tree.getCheckedKeys().join(",");
+    async save() {
+      var aclKeys = this.$refs.tree.getCheckedKeys()
       /* 
         vue elementUI tree树形控件获取父节点ID的实例
         修改源码:
@@ -88,23 +87,32 @@ export default {
           // if ((child.checked || includeHalfChecked && child.indeterminate) && (!leafOnly || leafOnly && child.isLeaf)) {
           if ((child.checked || child.indeterminate) && (!leafOnly || leafOnly && child.isLeaf)) {
         */
-      this.loading = true;
-      this.$API.permission
-        .doAssign(this.$route.params.id, ids)
-        .then((result) => {
-          this.loading = false;
-          this.$message.success(result.$message || "分配权限成功");
-          // 必须在跳转前获取(跳转后通过this获取不到正确的数据了)
-          const roleName = this.$route.query.roleName;
-          const roles = this.$store.getters.roles;
-          this.$router.replace("/acl/role/list", () => {
-            console.log("replace onComplete");
-            // 跳转成功后, 判断如果更新的是当前用户对应角色的权限, 重新加载页面以获得最新的数据
-            if (roles.includes(roleName)) {
-              window.location.reload();
-            }
-          });
-        });
+      // this.loading = true;
+      let results = await this.$API.role.reqUpdateAuth(
+        this.$route.params.id,
+        aclKeys
+      );
+      if (results.code == 200) {
+        this.$message.success("保存成功");
+        this.$router.replace("/acl/role");
+      }
+
+      // this.$API.permission
+      //   .doAssign(this.$route.params.id, ids)
+      //   .then((result) => {
+      //     this.loading = false;
+      //     this.$message.success(result.$message || "分配权限成功");
+      //     // 必须在跳转前获取(跳转后通过this获取不到正确的数据了)
+      //     const roleName = this.$route.query.roleName;
+      //     const roles = this.$store.getters.roles;
+      //     this.$router.replace("/acl/role/list", () => {
+      //       console.log("replace onComplete");
+      //       // 跳转成功后, 判断如果更新的是当前用户对应角色的权限, 重新加载页面以获得最新的数据
+      //       if (roles.includes(roleName)) {
+      //         window.location.reload();
+      //       }
+      //     });
+      //   });
     },
   },
 };
