@@ -10,10 +10,10 @@ const getDefaultState = () => {
     name: "",
     //存储用户头像
     avatar: "",
-    //存储用户权限
-    roles: [],
     //存储route
     routes: [],
+    //存储buttons
+    buttons: [],
     //对比之后[项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的异步路由]
     resultAsyncRoutes: [],
     //最终要展示给用户的路由
@@ -38,14 +38,14 @@ const mutations = {
     state.name = payload.name;
     //设置用户头像
     state.avatar = payload.avatar;
-    //菜单权限的标记
-    state.routes = payload.routes;
-    //角色
-    state.roles = payload.roles;
   },
   //异步路由
   SET_ROUTES: (state, payload) => {
     state.routes = payload;
+  },
+  //设置按钮
+  SET_BUTTONS: (state, payload) => {
+    state.buttons = payload;
   },
   //最终计算出来的异步路由
   SET_RESULTASYNCROUTES: (state, payload) => {
@@ -56,23 +56,7 @@ const mutations = {
     router.addRoutes(state.resultsAllRoutes)//这里是将计算好的路由添加进router
   },
 };
-//根据adminInfo中返回的routes权限 返回出所有path值
-const getRoutes = function (payload) {
-  var routes = payload;
-  var len = routes.length;
-  var routeList = [];
-  //从routes中获取所有path值并添加到routeList中
-  for (var i = 0; i < len; i++) {
-    routeList.push(routes[i].path);
-    if (routes[i].children) {
-      var len2 = routes[i].children.length;
-      for (var j = 0; j < len2; j++) {
-        routeList.push(routes[i].children[j].path);
-      }
-    }
-  }
-  return routeList;
-};
+
 //异步路由和后端返回的路由进行对比 返回最终展示的路由
 const computedAsyncRoutes = function (asyncRoutes, routes) {
   return asyncRoutes.filter((item) => {
@@ -114,8 +98,10 @@ const actions = {
           if (!data) {
             return reject("Verification failed, please Login again.");
           }
-          commit("SET_USERINFO", data);
-          commit("SET_ROUTES", getRoutes(data.routes));
+          console.log(data)
+          commit("SET_USERINFO", data.adminInfo);
+          commit("SET_ROUTES", data.routes);
+          commit('SET_BUTTONS',data.buttons)
           //存储异步路由
           commit(
             "SET_RESULTASYNCROUTES",

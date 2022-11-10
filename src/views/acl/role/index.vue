@@ -25,6 +25,7 @@
       stripe
       v-loading="listLoading"
       :data="roles"
+      style="width: 960px"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
@@ -92,7 +93,7 @@
       :total="total"
       :page-size="limit"
       :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 20px 0"
+      style="padding: 20px 0; "
       layout="prev, pager, next, jumper, ->, sizes, total"
       @current-change="getRoles"
       @size-change="handleSizeChange"
@@ -217,12 +218,14 @@ export default {
     /*
     删除指定的角色
     */
-    removeRole({ id, roleName }) {
-      this.$confirm(`确定删除 '${roleName}' 吗?`, "提示", {
+    removeRole({ id, name }) {
+      this.$confirm(`确定删除 '${name}' 吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
-          const result = await this.$API.role.removeById(id);
+          const result = await this.$API.role.reqDeleteRole(id);
           this.getRoles(this.roles.length === 1 ? this.page - 1 : this.page);
           this.$message.success(result.message || "删除成功!");
         })
@@ -243,18 +246,19 @@ export default {
     */
     removeRoles() {
       this.$confirm("此操作将永久删除该记录, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
           const ids = this.selectedRoles.map((role) => role.id);
-          const result = await this.$API.role.removeRoles(ids);
+          let result = await this.$API.role.reqDeleteRoles(ids);
           this.getRoles();
           this.$message({
             type: "success",
             message: "批量删除成功!",
           });
         })
-        .then((result) => {})
         .catch(() => {
           this.$message({
             type: "info",

@@ -36,56 +36,57 @@ export const constantRoutes = [
       },
     ],
   },
-  //权限管理
-  {
-    path: "/acl",
-    name: "acl",
-    component: Layout,
-    meta: {
-      title: "权限管理",
-      icon: "el-icon-lock",
-    },
-    children: [
-      {
-        path: "/acl/user",
-        name: "user",
-        component: () => import("@/views/acl/user"),
-        meta: {
-          title: "用户管理",
-        },
-      },
-      {
-        path: "/acl/role",
-        name: "role",
-        component: () => import("@/views/acl/role"),
-        meta: {
-          title: "角色管理",
-        }
-      },
-      {
-        name: "RoleAuth",
-        path: "role/auth/:id",
-        component: () => import("@/views/acl/role/roleAuth"),
-        meta: {
-          aciveMenu: "/acl/role/list",
-          title: "角色授权",
-        },
-        hidden: true,
-      },
-      {
-        path: "/acl/permission",
-        name: "permission",
-        component: () => import("@/views/acl/permission"),
-        meta: {
-          title: "菜单管理",
-        }
-      }
-      
-    ],
-  },
+
 ];
 //异步路由：不同的用户（角色），需要过滤出能看到的权限
 export const asyncRoutes = [
+    //权限管理
+    {
+      path: "/acl",
+      name: "acl",
+      component: Layout,
+      meta: {
+        title: "权限管理",
+        icon: "el-icon-lock",
+      },
+      children: [
+        {
+          path: "/acl/user",
+          name: "user",
+          component: () => import("@/views/acl/user"),
+          meta: {
+            title: "用户管理",
+          },
+        },
+        {
+          path: "/acl/role",
+          name: "role",
+          component: () => import("@/views/acl/role"),
+          meta: {
+            title: "角色管理",
+          }
+        },
+        {
+          name: "roleAuth",
+          path: "role/auth/:id",
+          component: () => import("@/views/acl/role/roleAuth"),
+          meta: {
+            aciveMenu: "/acl/role/list",
+            title: "角色授权",
+          },
+          hidden: true,
+        },
+        {
+          path: "/acl/permission",
+          name: "permission",
+          component: () => import("@/views/acl/permission"),
+          meta: {
+            title: "菜单管理",
+          }
+        }
+        
+      ],
+    },
   //小功能
   {
     path: "/smallFeature",

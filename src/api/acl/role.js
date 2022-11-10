@@ -36,3 +36,14 @@ export const reqUpdateAuth=(id,data)=>request({
   method:"put",
   data
 })
+//根据id删除角色
+export const reqDeleteRole=(id)=>request({
+  url:`/admin/acl/role/deleteRole/${id}`,
+  method:"delete"
+})
+//根据id批量删除角色
+export const reqDeleteRoles =(ids)=>request({
+  url:`/admin/acl/role/deleteRoles`,
+  method:"delete",
+  data:ids
+})

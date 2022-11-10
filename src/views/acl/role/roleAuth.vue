@@ -34,7 +34,7 @@ export default {
   },
 
   methods: {
-    /* 
+    /*
       初始化
       */
     init() {
@@ -42,21 +42,43 @@ export default {
       this.getPermissions(roleId);
     },
 
-    /* 
+    /*
       获取指定角色的权限列表
       */
     async getPermissions(roleId) {
       let resulst = await this.$API.role.reqGetAuth(roleId);
       if (resulst.code == 200) {
         const allPermissions = resulst.data;
+        this.reChecked(allPermissions);
         this.allPermissions = allPermissions;
         const checkedIds = this.getCheckedIds(allPermissions);
-        // // console.log('getPermissions() checkedIds', checkedIds)
+
         this.$refs.tree.setCheckedKeys(checkedIds);
       }
     },
-
-    /* 
+    reChecked(allPermissions) {
+      allPermissions.forEach((item) => {
+        if (
+          item.children &&
+          item.children.length > 0 &&
+          item.isChecked === true
+        ) {
+          //判断子元素的isChecked是否都为true ，如果是则不做处理返回ture 如果不是则修改父元素的isChecked
+          let flag = item.children.every((item) => item.isChecked === true);
+          if (!flag) {
+            item.isChecked = false;
+            console.log("enter");
+          }
+          if (
+            item.children &&
+            item.children.length > 0 &&
+            item.isChecked === true
+          )
+            this.reChecked(item.children);
+        }
+      });
+    },
+    /*
       得到所有选中的aclKey列表
       */
     getCheckedIds(auths, initArr = []) {
@@ -70,12 +92,14 @@ export default {
       }, initArr);
     },
 
-    /* 
+    /*
       保存权限列表
       */
     async save() {
-      var aclKeys = this.$refs.tree.getCheckedKeys()
-      /* 
+      var aclKeys = this.$refs.tree.getCheckedNodes(false, true);
+      //过滤aclKeys获取aclKey
+      aclKeys = aclKeys.map((item) => item.aclKey);
+      /*
         vue elementUI tree树形控件获取父节点ID的实例
         修改源码:
         情况1: element-ui没有实现按需引入打包

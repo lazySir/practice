@@ -7,6 +7,7 @@ import * as spu from './product/spu'
 import * as sku from './product/sku'
 import * as menus from './acl/menus'
 import * as role from './acl/role'
+import * as user from './acl/user'
 export default{
   passwordManager,
   category,
@@ -15,5 +16,6 @@ export default{
   spu,
   sku,
   menus,
-  role
+  role,
+  user
 }
