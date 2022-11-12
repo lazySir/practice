@@ -1,23 +1,35 @@
 import { login, logout, getInfo } from "@/api/user";
-import { getToken, setToken, removeToken } from "@/utils/auth";
-import { anyRoutes, resetRouter, asyncRoutes,constantRoutes } from "@/router";
-import router from '@/router'
+import {
+  getToken,
+  setToken,
+  setName,
+  getName,
+  setRoutes,
+  getRoutes,
+  setButtons,
+  getButtons,
+  setAvatar,
+  getAvatar,
+  removeAll,
+} from "@/utils/auth";
+import { anyRoutes, resetRouter, asyncRoutes, constantRoutes } from "@/router";
+import router from "@/router";
 const getDefaultState = () => {
   return {
     //获取token
     token: getToken(),
     //存储用户名
-    name: "",
+    name: getName(),
     //存储用户头像
-    avatar: "",
+    avatar:getAvatar(),
     //存储route
-    routes: [],
+    routes: getRoutes(),
     //存储buttons
-    buttons: [],
+    buttons: getButtons(),
     //对比之后[项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的异步路由]
     resultAsyncRoutes: [],
     //最终要展示给用户的路由
-    resultsAllRoutes:[]
+    resultsAllRoutes: [],
   };
 };
 
@@ -32,32 +44,36 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token;
   },
-  //移出token
-  REMOVE_TOKEN: (state) => {
-    state.token = "";
-  },
   //存储用户信息
   SET_USERINFO: (state, payload) => {
     //设置用户名
     state.name = payload.name;
+    setName(payload.name);
     //设置用户头像
     state.avatar = payload.avatar;
+    setAvatar(payload.avatar);
   },
   //异步路由
   SET_ROUTES: (state, payload) => {
     state.routes = payload;
+
+    setRoutes(payload);
   },
   //设置按钮
   SET_BUTTONS: (state, payload) => {
     state.buttons = payload;
+    setButtons(payload);
   },
   //最终计算出来的异步路由
   SET_RESULTASYNCROUTES: (state, payload) => {
     //这个是比对之后要展示的异步路由
     state.resultAsyncRoutes = payload;
     //将所有的路由进行合并 常量路由 异步路由 任意路由
-    state.resultsAllRoutes=constantRoutes.concat(state.resultAsyncRoutes,anyRoutes)
-    router.addRoutes(state.resultsAllRoutes)//这里是将计算好的路由添加进router
+    state.resultsAllRoutes = constantRoutes.concat(
+      state.resultAsyncRoutes,
+      anyRoutes
+    );
+    router.addRoutes(state.resultsAllRoutes); //这里是将计算好的路由添加进router
   },
 };
 
@@ -67,7 +83,7 @@ const computedAsyncRoutes = function (asyncRoutes, routes) {
     if (routes.indexOf(item.name) != -1) {
       //代表要展示
       //递归:别忘记还有2，3，4，5级路由
-      if (item.children&&item.children.length) {
+      if (item.children && item.children.length) {
         item.children = computedAsyncRoutes(item.children, routes);
       }
       return true;
@@ -104,8 +120,7 @@ const actions = {
           }
           commit("SET_USERINFO", data.adminInfo);
           commit("SET_ROUTES", data.routes);
-          commit('SET_BUTTONS',data.buttons)
-          // console.log(asyncRoutes,state.routes)
+          commit("SET_BUTTONS", data.buttons);
           //存储异步路由
           commit(
             "SET_RESULTASYNCROUTES",
@@ -119,15 +134,14 @@ const actions = {
     });
   },
 
-  // 用户退出登录
+  // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token)
         .then(() => {
-          removeToken(); // must remove  token  first
           resetRouter();
-          commit('REMOVE_TOKEN')
-          commit("RESET_STATE");
+          removeAll(); // 删除所有的cookie
+          commit("RESET_STATE");//重置state
           resolve();
         })
         .catch((error) => {
@@ -136,14 +150,6 @@ const actions = {
     });
   },
 
-  // remove token
-  resetToken({ commit }) {
-    return new Promise((resolve) => {
-      removeToken(); // must remove  token  first
-      commit("RESET_STATE");
-      resolve();
-    });
-  },
 };
 
 export default {
