@@ -20,20 +20,22 @@ import { anyRoutes, resetRouter, asyncRoutes, constantRoutes } from "@/router";
 import router from "@/router";
 const getDefaultState = () => {
   return {
+    ifchange: false,
     //获取token
     token: getToken(),
     //存储用户名
     name: getName(),
     //存储用户头像
-    avatar:getAvatar(),
+    avatar: getAvatar(),
     //存储route
     routes: getRoutes(),
     //存储buttons
     buttons: getButtons(),
     //对比之后[项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的异步路由]
-    resultAsyncRoutes:getResultAsyncRoutes(),
-    //最终要展示给用户的路由
-    resultsAllRoutes: getResultAllRoutes()
+    resultAsyncRoutes: getResultAsyncRoutes(),
+    // resultAsyncRoutes:[],
+    resultsAllRoutes: getResultAllRoutes(),
+    // resultsAllRoutes: []
   };
 };
 
@@ -77,8 +79,9 @@ const mutations = {
       state.resultAsyncRoutes,
       anyRoutes
     );
-    setResultAllRoutes(state.resultsAllRoutes)
+    setResultAllRoutes(state.resultsAllRoutes);
     router.addRoutes(state.resultsAllRoutes); //这里是将计算好的路由添加进router
+    state.ifchange = true;
   },
 };
 
@@ -95,6 +98,7 @@ const computedAsyncRoutes = function (asyncRoutes, routes) {
     }
   });
 };
+
 const actions = {
   //登录业务
   async login(context, payload) {
@@ -138,7 +142,13 @@ const actions = {
         });
     });
   },
-
+  // 设置动态路由
+  setRouter({ commit, state }) {
+    commit(
+      "SET_RESULTASYNCROUTES",
+      computedAsyncRoutes(asyncRoutes, state.routes)
+    );
+  },
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
@@ -146,7 +156,7 @@ const actions = {
         .then(() => {
           resetRouter();
           removeAll(); // 删除所有的cookie
-          commit("RESET_STATE");//重置state
+          commit("RESET_STATE"); //重置state
           resolve();
         })
         .catch((error) => {
@@ -154,7 +164,6 @@ const actions = {
         });
     });
   },
-
 };
 
 export default {
