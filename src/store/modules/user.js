@@ -32,6 +32,10 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token;
   },
+  //移出token
+  REMOVE_TOKEN: (state) => {
+    state.token = "";
+  },
   //存储用户信息
   SET_USERINFO: (state, payload) => {
     //设置用户名
@@ -98,10 +102,10 @@ const actions = {
           if (!data) {
             return reject("Verification failed, please Login again.");
           }
-          console.log(data)
           commit("SET_USERINFO", data.adminInfo);
           commit("SET_ROUTES", data.routes);
           commit('SET_BUTTONS',data.buttons)
+          // console.log(asyncRoutes,state.routes)
           //存储异步路由
           commit(
             "SET_RESULTASYNCROUTES",
@@ -115,13 +119,14 @@ const actions = {
     });
   },
 
-  // user logout
+  // 用户退出登录
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token)
         .then(() => {
           removeToken(); // must remove  token  first
           resetRouter();
+          commit('REMOVE_TOKEN')
           commit("RESET_STATE");
           resolve();
         })

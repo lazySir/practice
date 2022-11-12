@@ -254,9 +254,9 @@ export default {
         CheckedRoles,
       });
       if (results.code == 200) {
-        this.$message.success(results.message||'授权成功');
+        this.$message.success(results.message || "授权成功");
         this.dialogRoleVisible = false;
-        this.getUsers(user.id?this.page:1);
+        this.getUsers(user.id ? this.page : 1);
       }
     },
 
@@ -342,11 +342,17 @@ export default {
     删除所有选中的用户
     */
     revomveUsers() {
-      this.$confirm("确定删除吗?")
+      this.$confirm(`确定删除吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(async () => {
-          await this.$API.user.removeUsers(this.selectedIds);
-          this.$message.success("删除成功");
-          this.getUsers();
+          let results = await this.$API.user.reqDeleteUsers(this.selectedIds);
+          if (results.code == 200) {
+            this.$message.success(results.message || "删除成功");
+            this.getUsers();
+          }
         })
         .catch(() => {
           this.$message.info("取消删除");
@@ -357,7 +363,7 @@ export default {
     列表选中状态发生改变的监听回调
     */
     handleSelectionChange(selection) {
-      this.selectedIds = selection.map((item) => item.id);
+      this.selectedIds = selection.map((item) => item.admin_id);
     },
 
     /* 

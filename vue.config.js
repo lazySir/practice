@@ -42,6 +42,10 @@ module.exports = {
           target: "http://127.0.0.1:3007",
           pathRewrite: { "^/dev-api": "" },
         },
+        "/dev-api":{
+          target: "http://192.168.123.147:3007",
+          pathRewrite: { "^/dev-api": "" },
+        }
       },
   },
   configureWebpack: {

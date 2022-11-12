@@ -49,3 +49,10 @@ export const reqUpdateUserRole=(data)=>{
     data
   })
 }
+export const reqDeleteUsers=(data)=>{
+  return request({
+    url:`/admin/acl/user/deleteUsers`,
+    method:'delete',
+    data
+  })
+}
