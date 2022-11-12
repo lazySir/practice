@@ -11,6 +11,10 @@ import {
   setAvatar,
   getAvatar,
   removeAll,
+  setResultAsyncRoutes,
+  getResultAsyncRoutes,
+  setResultAllRoutes,
+  getResultAllRoutes,
 } from "@/utils/auth";
 import { anyRoutes, resetRouter, asyncRoutes, constantRoutes } from "@/router";
 import router from "@/router";
@@ -27,9 +31,9 @@ const getDefaultState = () => {
     //存储buttons
     buttons: getButtons(),
     //对比之后[项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的异步路由]
-    resultAsyncRoutes: [],
+    resultAsyncRoutes:getResultAsyncRoutes(),
     //最终要展示给用户的路由
-    resultsAllRoutes: [],
+    resultsAllRoutes: getResultAllRoutes()
   };
 };
 
@@ -56,7 +60,6 @@ const mutations = {
   //异步路由
   SET_ROUTES: (state, payload) => {
     state.routes = payload;
-
     setRoutes(payload);
   },
   //设置按钮
@@ -68,11 +71,13 @@ const mutations = {
   SET_RESULTASYNCROUTES: (state, payload) => {
     //这个是比对之后要展示的异步路由
     state.resultAsyncRoutes = payload;
+    setResultAsyncRoutes(payload);
     //将所有的路由进行合并 常量路由 异步路由 任意路由
     state.resultsAllRoutes = constantRoutes.concat(
       state.resultAsyncRoutes,
       anyRoutes
     );
+    setResultAllRoutes(state.resultsAllRoutes)
     router.addRoutes(state.resultsAllRoutes); //这里是将计算好的路由添加进router
   },
 };
