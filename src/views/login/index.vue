@@ -56,6 +56,8 @@
         @click.native.prevent="handleLogin"
         >登录</el-button
       >
+      <div class=""></div>
+      <div @click="register()" class="register">立即注册</div>
     </el-form>
   </div>
 </template>
@@ -101,6 +103,9 @@ export default {
   //   }
   // },
   methods: {
+    register() {
+      this.$router.push({ path: '/register' });
+    },
     showPwd() {
       if (this.passwordType === "password") {
         this.passwordType = "";
@@ -242,5 +247,12 @@ $light_gray: #eee;
     cursor: pointer;
     user-select: none;
   }
+}
+.register {
+  text-decoration: underline;
+  color: grey;
+  cursor: pointer;
+  position: relative;
+  left: 80%;
 }
 </style>

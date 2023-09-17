@@ -14,7 +14,7 @@ export const constantRoutes = [
     path: "/login",
     component: () => import("@/views/login/index"),
     hidden: true,
-    meta: { title: "练手项目" },
+    meta: { title: "商城后台管理系统" },
   },
   //404
   {
@@ -22,7 +22,7 @@ export const constantRoutes = [
     component: () => import("@/views/404"),
     hidden: true,
   },
-//数据可视化
+  //数据可视化
   {
     path: "/",
     component: Layout,
@@ -36,57 +36,62 @@ export const constantRoutes = [
       },
     ],
   },
-
+  //注册
+  {
+    path: "/register",
+    hidden: true,
+    component: () => import("@/views/register/index"),
+    meta: { title: "注册" },
+  },
 ];
 //异步路由：不同的用户（角色），需要过滤出能看到的权限
 export const asyncRoutes = [
-    //权限管理
-    {
-      path: "/acl",
-      name: "acl",
-      component: Layout,
-      meta: {
-        title: "权限管理",
-        icon: "el-icon-lock",
-      },
-      children: [
-        {
-          path: "/acl/user",
-          name: "user",
-          component: () => import("@/views/acl/user"),
-          meta: {
-            title: "用户管理",
-          },
-        },
-        {
-          path: "/acl/role",
-          name: "role",
-          component: () => import("@/views/acl/role"),
-          meta: {
-            title: "角色管理",
-          }
-        },
-        {
-          name: "roleAuth",
-          path: "role/auth/:id",
-          component: () => import("@/views/acl/role/roleAuth"),
-          meta: {
-            aciveMenu: "/acl/role/list",
-            title: "角色授权",
-          },
-          hidden: true,
-        },
-        {
-          path: "/acl/permission",
-          name: "permission",
-          component: () => import("@/views/acl/permission"),
-          meta: {
-            title: "菜单管理",
-          }
-        }
-        
-      ],
+  //权限管理
+  {
+    path: "/acl",
+    name: "acl",
+    component: Layout,
+    meta: {
+      title: "权限管理",
+      icon: "el-icon-lock",
     },
+    children: [
+      {
+        path: "/acl/user",
+        name: "user",
+        component: () => import("@/views/acl/user"),
+        meta: {
+          title: "用户管理",
+        },
+      },
+      {
+        path: "/acl/role",
+        name: "role",
+        component: () => import("@/views/acl/role"),
+        meta: {
+          title: "角色管理",
+        },
+      },
+      {
+        name: "roleAuth",
+        path: "role/auth/:id",
+        component: () => import("@/views/acl/role/roleAuth"),
+        meta: {
+          aciveMenu: "/acl/role/list",
+          title: "角色授权",
+        },
+        hidden: true,
+      },
+      {
+        path: "/acl/permission",
+        name: "permission",
+        component: () => import("@/views/acl/permission"),
+        meta: {
+          title: "菜单管理",
+        },
+      },
+    ],
+  },
   //小功能
   {
     path: "/smallFeature",
@@ -131,7 +136,6 @@ export const asyncRoutes = [
         component: () => import("@/views/product/tradeMark"),
         meta: {
           title: "品牌管理",
-
         },
       },
       {

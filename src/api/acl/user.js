@@ -56,3 +56,26 @@ export const reqDeleteUsers=(data)=>{
     data
   })
 }
+//在注册界面注册
+export const reqRegister = (data)=>{
+  return request({
+    url:`/api/user/register`,
+    method:'post',
+    data
+  })
+}
+//注册界面发送邮箱验证码
+export const  reqGetEmailCode=(email)=>{
+  return request({
+    url:`/api/sendCode`,
+    method:'post',
+    data:{email}
+  })
+}
+//注册界面获取验证码
+export const reqGetCode=()=>{
+  return request({
+    url:`/api/getSvgCaptcha`,
+    method:'get'
+  })
+}
