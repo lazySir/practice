@@ -173,7 +173,6 @@ export default {
       this.dialogPermissionVisible = true;
 
       if (row.level) {
-        console.log(row);
         this.permission.type_id = row.type_id;
         this.permission.level = row.level + 1;
         this.permission.paclKey = row.aclKey; // 用于显示父名称, 但提交请求时是不需要的
