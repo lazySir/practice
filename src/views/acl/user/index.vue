@@ -36,7 +36,16 @@
       <el-table-column type="index" label="序号" width="80" align="center" />
       <el-table-column prop="username" label="账号" width="150" />
       <el-table-column prop="name" label="用户昵称" width="150" />
-      <el-table-column prop="role_name" label="角色" />
+      <el-table-column prop="role_name" label="角色">
+        <template slot-scope="{ row, $index }">
+          <el-tag
+            style="margin: 0px 10px"
+            v-for="item in row.role_name"
+            type="success"
+            >{{ item }}</el-tag
+          >
+        </template>
+      </el-table-column>
       <el-table-column width="100px" label="状态码">
         <template slot-scope="{ row, $index }">
           <el-switch
@@ -403,9 +412,9 @@ export default {
         this.users.forEach((item) => {
           item.state = item.state == 1 ? true : false;
         });
-        this.users.forEach((item) => {
-          item.role_name = item.role_name.join("、");
-        });
+        // this.users.forEach((item) => {
+        //   item.role_name = item.role_name.join("、");
+        // });
         this.total = total - 1;
       }
 
@@ -448,6 +457,9 @@ export default {
         }
       });
     },
+  },
+  computed: {
+    getRoleNameArr() {},
   },
 };
 </script>
